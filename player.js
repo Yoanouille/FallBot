@@ -9,10 +9,11 @@ function Player(x, y, z, w, h) {
     this.yspd = 0;
 
     this.acc = 800;
-    this.spd = 200;
+    this.spd = 300;
 }
 
 Player.prototype.draw = function(cam, ctx) {
+    ctx.fillStyle = "blue";
     drawRectangle(this, cam, ctx);
 }
 
@@ -21,6 +22,11 @@ Player.prototype.update = function(keys, dt) {
     let yDir = (keys.down ? 1 : 0) - (keys.up ? 1 : 0);
 
     let d = Math.sqrt(xDir*xDir + yDir*yDir);
+
+    if(d == 0){
+        this.xspd *= Math.pow(.1, dt);
+        this.yspd *= Math.pow(.1, dt);
+    }
 
     this.xspd += xDir*this.acc*dt/(d>0?d:1);
     this.yspd += yDir*this.acc*dt/(d>0?d:1);
