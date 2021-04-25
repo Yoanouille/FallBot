@@ -1,6 +1,7 @@
 function World(){
     this.player = new Player(-25, -25, 1, 50, 50);
     this.platforms = [new Platform(0, -50, 10, 300, 400), new Platform(-80, 30, 15,500, 200), new Platform(-20, -50, 20, 100, 100)];
+    this.gems = [new Gem(-20, -20, 2, 10, 10)];
     this.cam = {x:0, y:0, z:0};
     this.time = 0;
 }
@@ -26,13 +27,17 @@ World.prototype.update = function(keyList, dt){
         }
         
     }
+
+    for(let i = 0; i < this.gems.length; i++){
+        this.gems[i].update(dt, this);
+    }
 }
 
 World.prototype.draw = function(ctx){
     ctx.fillStyle = "rgb(20, 20, 20)";
     ctx.fillRect(0, 0, cv.width, cv.height);
-    let drawList = [this.player];
-    drawList = drawList.concat(this.platforms);
+    let drawList = this.platforms.concat(this.gems);
+    drawList.push(this.player);
     drawList.sort(function(a, b){
         return b.z-a.z;
     });
