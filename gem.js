@@ -7,7 +7,7 @@ function Gem(x, y, z, w, h){
     this.h = h;
 
     this.color = "red";
-    
+
     this.xspd = 0;
     this.yspd = 0;
 
@@ -16,25 +16,28 @@ function Gem(x, y, z, w, h){
     this.maxZSpd = 5;
 
     this.lastPlatform = null;
+    this.isAttracted = false;
 }
 
 Gem.prototype.update = function(dt, world){
-    let lastZ = this.z;
+    if(!this.isAttracted){
+        let lastZ = this.z;
 
-    this.zspd += this.grav * dt;
-    if(this.zspd > this.maxZSpd) {
-        this.zspd = this.maxZSpd;
-    }
-
-    this.x += this.xspd * dt;
-    this.y += this.yspd * dt;
-    this.z += this.zspd * dt;
-
-    this.collision(world, lastZ);
-
-    if(this.lastPlatform != null && !rectCollision(this, this.lastPlatform)){
-        this.xspd *= Math.pow(.01, dt);
-        this.yspd *= Math.pow(.01, dt);
+        this.zspd += this.grav * dt;
+        if(this.zspd > this.maxZSpd) {
+            this.zspd = this.maxZSpd;
+        }
+    
+        this.x += this.xspd * dt;
+        this.y += this.yspd * dt;
+        this.z += this.zspd * dt;
+    
+        this.collision(world, lastZ);
+    
+        if(this.lastPlatform != null && !rectCollision(this, this.lastPlatform)){
+            this.xspd *= Math.pow(.01, dt);
+            this.yspd *= Math.pow(.01, dt);
+        }
     }
 }
 

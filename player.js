@@ -30,6 +30,9 @@ function Player(x, y, z, w, h) {
     this.feetDist = 0.05;
     this.feetHDist = 0;
     this.footSize = 20;
+
+    this.attractRadius = 50;
+    this.catchRadius = 20;
 }
 
 Player.prototype.draw = function(cam, ctx, world) {
@@ -186,7 +189,8 @@ Player.prototype.update = function(keys, dt, world) {
 
         this.isOnPlatform();
     }
-    
+
+    this.collectGems(world.gems);
 }
 
 Player.prototype.collision = function(world, lastZ) {
@@ -198,6 +202,28 @@ Player.prototype.collision = function(world, lastZ) {
             this.zspd = 0;
             this.platformStop = world.platforms[i];
             return;
+        }
+    }
+}
+
+Player.prototype.collectGems = function(gems){
+    for(let i = 0; i < gems.length; i++){
+        let g = gems[i];
+        let dx = this.x+this.w/2-g.x;
+        let dy = this.y+this.h/2-g.y;
+        let dz = (this.z-g.z)*100;
+        let d = Math.sqrt(dx*dx+dy*dy+dz*dz);
+        if(d < this.attractRadius || g.isAttracted){
+            g.isAttracted = true;
+            console.log("ACCIO GEMME");
+            g.x += dx*.4;
+            g.y += dy*.4;
+            g.z += (dz/100)*.4;
+            if(d < this.catchRadius){
+                console.log("CATCH");
+                gems.splice(i, 1);
+                i--;
+            }
         }
     }
 }
