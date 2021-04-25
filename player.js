@@ -21,6 +21,8 @@ function Player(x, y, z, w, h) {
     this.acc = 800;
     this.spd = 300;
 
+    this.ACCspd = 600;
+
     this.platformStop;
 
     this.feetDist = 0.05;
@@ -146,15 +148,15 @@ Player.prototype.update = function(keys, dt, world) {
         lastZ = this.z;
 
         this.zspd += this.grav * dt;
-        if(this.zspd > this.maxZSpd) {
-            this.zspd = this.maxZSpd;
+        maxSpeedZ = (keys.accelerate ? this.ACCspd : this.maxZSpd);
+        if(this.zspd > maxSpeedZ) {
+            this.zspd = maxSpeedZ;
         }
 
         this.x += this.xspd * dt;
         this.y += this.yspd * dt;
         this.z += this.zspd * dt;
 
-        //APPELLE LA FONCTION COLLISION
         this.collision(world, lastZ);
     } else if(this.state == "walk") {
 

@@ -8,7 +8,7 @@ function World(){
 }
 
 World.prototype.update = function(keyList, dt){
-    this.player.update({up:keyList[38], down:keyList[40], left:keyList[37], right:keyList[39]}, dt, this);
+    this.player.update({up:keyList[38], down:keyList[40], left:keyList[37], right:keyList[39], accelerate:keyList[88]}, dt, this);
     //this.cam.z = this.player.z - 1;
     this.cam.z += (this.player.z-1-this.cam.z)*.3;
     this.cam.x += (this.player.x+this.player.w/2-this.cam.x)*.2;
