@@ -7,7 +7,7 @@ function Game(){
 
 Game.prototype.start = function(keyList, ctx){
     let g = this;
-    this.interval = setInterval(function(){g.update(1/60, keyList, ctx)}, 1000/60);
+    this.interval = setInterval(function(){g.update(1/30, keyList, ctx)}, 1000/30);
 }
 
 Game.prototype.end = function(){
