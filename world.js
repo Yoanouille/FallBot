@@ -12,6 +12,20 @@ World.prototype.update = function(keyList, dt){
     this.cam.x += (this.player.x+this.player.w/2-this.cam.x)*.2;
     this.cam.y += (this.player.y+this.player.h/2-this.cam.y)*.2;
     this.time += dt;
+
+    if(this.platforms[0].z < this.cam.z ) {
+        this.platforms.shift();
+        //nbNew = Math.floor(Math.random()) * 3 + 1;
+        index = 0
+        nbNew = 1;
+        for(let i = 0; i < nbNew; i++) {
+            let p = this.player;
+            let w =  Math.random() * 500 + 100;
+            let h =  Math.random() * 500 + 100;
+            this.platforms.push(new Platform(p.x + Math.random() * 400 - 200 - w / 2, p.y + Math.random() * 400 - 200 - h / 2, this.platforms[index].z + Math.random() * 3 + 3,w, h));
+        }
+        
+    }
 }
 
 World.prototype.draw = function(ctx){
