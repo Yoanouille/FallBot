@@ -5,6 +5,8 @@ function Player(x, y, z, w, h) {
     this.w = w;
     this.h = h;
 
+    this.angle = Math.PI / 4;
+
     this.state = "fall";
 
     this.xspd = 0;
@@ -101,6 +103,24 @@ Player.prototype.draw = function(cam, ctx, world) {
     drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rdx, y:this.y+this.h+this.feetHDist-this.footSize/2+rdy, z:this.z+this.feetDist+rdz, w:this.footSize, h:this.footSize}, cam, ctx);
     //ctx.fillStyle = "rgb(104, 107, 140)";
     drawRectangle(this, cam, ctx);
+
+    let speed = Math.sqrt(this.xspd*this.xspd+this.yspd*this.yspd);
+    //if(speed != 0) {
+        this.angle = Math.atan2(this.yspd, this.xspd);
+    //}
+
+    let dz = this.z-cam.z;
+    ctx.save();
+    ctx.translate((this.x + this.w / 2-cam.x)/dz+ctx.canvas.width/2, (this.y + this.h / 2 -cam.y)/dz+ctx.canvas.height/2);
+    ctx.rotate(this.angle);
+    ctx.fillStyle = "rgb(150, 157, 190)";
+    ctx.fillRect(-15 / dz, -15 / dz, 30 / dz, 30 / dz);
+    ctx.fillStyle = "rgb(0, 7,0)";
+    ctx.fillRect(9 / dz, -6 / dz, 2 / dz, 2 / dz);
+    ctx.fillRect(9 / dz, 4 / dz, 2 / dz, 2 / dz);
+    ctx.restore();
+
+
 }
 
 Player.prototype.update = function(keys, dt, world) {
