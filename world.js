@@ -4,6 +4,7 @@ function World(){
     this.gems = [new Gem(-20, -20, 2, 10, 10)];
     this.cam = {x:0, y:0, z:0};
     this.time = 0;
+    this.nbPlatformPerPro = 75;
 }
 
 World.prototype.update = function(keyList, dt){
@@ -16,20 +17,24 @@ World.prototype.update = function(keyList, dt){
 
     if(this.platforms[0].z < this.cam.z ) {
         this.platforms.shift();
-        //nbNew = Math.floor(Math.random()) * 3 + 1;
-        index = 0
-        nbNew = 1;
-        for(let i = 0; i < nbNew; i++) {
-            let p = this.player;
-            let w =  Math.random() * 500 + 100;
-            let h =  Math.random() * 500 + 100;
-            this.platforms.push(new Platform(p.x + Math.random() * 400 - 200 - w / 2, p.y + Math.random() * 400 - 200 - h / 2, this.platforms[index].z + Math.random() * 3 + 3,w, h));
+        if(this.platforms.length <= this.nbPlatformPerPro) {
+            this.genProfondeur();
         }
-        
     }
 
     for(let i = 0; i < this.gems.length; i++){
         this.gems[i].update(dt, this);
+    }
+}
+
+World.prototype.genProfondeur = function() {
+    let pro = this.platforms[this.platforms.length - 1].z;
+
+    for(let i = 0; i < this.nbPlatformPerPro; i++) {
+        let p = this.player;
+        let w =  Math.random() * 1000 + 300;
+        let h =  Math.random() * 1000 + 300;
+        this.platforms.push(new Platform(p.x + Math.random() * 8000 - 4000 - w / 2, p.y + Math.random() * 8000 - 4000 - h / 2, pro + Math.random() * 15 + 3,w, h));
     }
 }
 
