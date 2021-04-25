@@ -21,7 +21,9 @@ function Player(x, y, z, w, h) {
     this.acc = 800;
     this.spd = 300;
 
-    this.ACCspd = 600;
+    this.ACCgrav = 10;
+    this.ACCspd = 10;
+    this.decelerating = false;
 
     this.platformStop;
 
@@ -33,14 +35,15 @@ function Player(x, y, z, w, h) {
 Player.prototype.draw = function(cam, ctx, world) {
     
     let coeff = .01;
-    let lux = -this.yspd*coeff;
-    let luy = -this.xspd*coeff;
-    let ldx = this.yspd*coeff;
-    let ldy = this.xspd*coeff;
-    let rux = this.yspd*coeff;
-    let ruy = this.xspd*coeff;
-    let rdx = -this.yspd*coeff;
-    let rdy = -this.xspd*coeff;
+    let accAnim = Math.max(0, this.zspd-this.maxZSpd);
+    let lux = -this.yspd*coeff+accAnim;
+    let luy = -this.xspd*coeff+accAnim;
+    let ldx = this.yspd*coeff+accAnim;
+    let ldy = this.xspd*coeff-accAnim;
+    let rux = this.yspd*coeff-accAnim;
+    let ruy = this.xspd*coeff+accAnim;
+    let rdx = -this.yspd*coeff-accAnim;
+    let rdy = -this.xspd*coeff-accAnim;
 
     let luz = 0;
     let ldz = 0;
@@ -146,10 +149,14 @@ Player.prototype.update = function(keys, dt, world) {
         }
 
         lastZ = this.z;
+        if(keys.accelerate) this.decelerating = true;
 
-        this.zspd += this.grav * dt;
+        let grav = (keys.accelerate ? this.ACCgrav : this.grav);
+        if(!keys.accelerate && this.decelerating) grav = -this.ACCgrav;
+        if(this.zspd <= this.maxZSpd && this.decelerating) this.decelerating = false;
+        this.zspd += grav * dt;
         maxSpeedZ = (keys.accelerate ? this.ACCspd : this.maxZSpd);
-        if(this.zspd > maxSpeedZ) {
+        if(this.zspd > maxSpeedZ && (!this.decelerating || keys.accelerate)){
             this.zspd = maxSpeedZ;
         }
 

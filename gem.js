@@ -6,6 +6,7 @@ function Gem(x, y, z, w, h){
     this.w = w;
     this.h = h;
 
+    this.color = "red";
     
     this.xspd = 0;
     this.yspd = 0;

@@ -1,7 +1,7 @@
 function World(){
     this.player = new Player(-25, -25, 1, 50, 50);
     this.platforms = [new Platform(0, -50, 10, 300, 400), new Platform(-80, 30, 15,500, 200), new Platform(-20, -50, 20, 100, 100)];
-    this.gems = [new Gem(-20, -20, 2, 10, 10)];
+    this.gems = [new Gem(-20, -20, 2, 10, 10), new Gem(60, -20, 2, 10, 10)];
     this.cam = {x:0, y:0, z:0};
     this.time = 0;
     this.nbPlatformPerPro = 75;
@@ -15,11 +15,16 @@ World.prototype.update = function(keyList, dt){
     this.cam.y += (this.player.y+this.player.h/2-this.cam.y)*.2;
     this.time += dt;
 
-    if(this.platforms[0].z < this.cam.z ) {
-        this.platforms.shift();
-        if(this.platforms.length <= this.nbPlatformPerPro) {
-            this.genProfondeur();
+    for(let i = 0; i < this.platforms.length; i++){
+        if(this.platforms[i].z < this.cam.z ) {
+            this.platforms.shift();
+            i--;
+        } else {
+            break;
         }
+    }
+    if(this.platforms.length <= this.nbPlatformPerPro) {
+        this.genProfondeur();
     }
 
     for(let i = 0; i < this.gems.length; i++){
@@ -51,11 +56,14 @@ World.prototype.draw = function(ctx){
         drawList[i].draw(this.cam, ctx, this);
     }
 
-    let dz = this.player.z-this.cam.z;
-    
-    let dx = this.gems[0].x - this.player.x;
-    let dy = this.gems[0].y - this.player.y;
 
-    let angle = Math.atan2(dy, dx);
-    drawTriangle((this.player.x + this.player.w / 2 - this.cam.x )/dz +ctx.canvas.width/2, (this.player.y + this.player.h / 2 -this.cam.y)/dz+ctx.canvas.height/2,angle - Math.PI / 2, 150, 100,50);
+    let dz = this.player.z-this.cam.z;
+    for(let i = 0; i < this.gems.length; i++){
+        let dx = this.gems[i].x - this.player.x;
+        let dy = this.gems[i].y - this.player.y;
+
+        let angle = Math.atan2(dy, dx);
+        ctx.strokeStyle = this.gems[i].color;
+        drawTriangle((this.player.x + this.player.w / 2 - this.cam.x )/dz +ctx.canvas.width/2, (this.player.y + this.player.h / 2 -this.cam.y)/dz+ctx.canvas.height/2,angle - Math.PI / 2, 75, 55, 10);
+    }
 }

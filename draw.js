@@ -19,7 +19,6 @@ function drawTriangle(centerX, centerY, angle, hmax, hmin, w) {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(angle);
-    ctx.strokeStyle = "white";
     ctx.beginPath();
     ctx.moveTo(0, hmax);
     ctx.lineTo(-w / 2, hmin);
