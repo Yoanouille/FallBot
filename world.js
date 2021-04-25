@@ -1,11 +1,11 @@
 function World(){
     this.player = new Player(-25, -25, 1, 50, 50);
-    this.platforms = [new Platform(0, -50, 10, 100, 150)];
+    this.platforms = [new Platform(0, -50, 10, 300, 400), new Platform(-80, 30, 15,500, 200), new Platform(-20, -50, 20, 100, 100)];
     this.cam = {x:0, y:0, z:0};
 }
 
 World.prototype.update = function(keyList, dt){
-    this.player.update({up:keyList[38], down:keyList[40], left:keyList[37], right:keyList[39]}, 1/60);
+    this.player.update({up:keyList[38], down:keyList[40], left:keyList[37], right:keyList[39]}, 1/60, this);
     this.cam.z = this.player.z - 1;
 }
 
