@@ -14,3 +14,19 @@ function drawRectangle(rect, cam, ctx){
         ctx.globalAlpha = 1;
     }
 }
+
+function drawTriangle(centerX, centerY, angle, hmax, hmin, w) {
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(angle);
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(0, hmax);
+    ctx.lineTo(-w / 2, hmin);
+    ctx.lineTo(w / 2, hmin);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.restore();
+
+}

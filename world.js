@@ -50,4 +50,12 @@ World.prototype.draw = function(ctx){
     for(let i = 0; i < drawList.length; i++){
         drawList[i].draw(this.cam, ctx, this);
     }
+
+    let dz = this.player.z-this.cam.z;
+    
+    let dx = this.gems[0].x - this.player.x;
+    let dy = this.gems[0].y - this.player.y;
+
+    let angle = Math.atan2(dy, dx);
+    drawTriangle((this.player.x + this.player.w / 2 - this.cam.x )/dz +ctx.canvas.width/2, (this.player.y + this.player.h / 2 -this.cam.y)/dz+ctx.canvas.height/2,angle - Math.PI / 2, 150, 100,50);
 }
