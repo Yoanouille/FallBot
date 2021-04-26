@@ -63,24 +63,24 @@ Game.prototype.drawMenu = function(ctx){
     ctx.restore();
 
     ctx.fillStyle = "white";
-    ctx.font = "60px Verdana";
-    ctx.fillText("FALLBOT", cv.width/8, cv.height*1/4);
+    ctx.font = "80px Verdana";
+    ctx.fillText("FALLBOT", cv.width/8, cv.height*0.8/4);
 
     let dPlayX = mouse.x - cv.width/8;
-    let dPlayY = mouse.y - cv.height*1.5/4-cv.height*1/12;
+    let dPlayY = mouse.y - cv.height*1.5/4-cv.height*1.5/12;
 
     let dTutorialX = mouse.x - cv.width/8;
     let dTutorialY = mouse.y - cv.height*1.5/4;
-    ctx.font = "20px Verdana";
+    ctx.font = "30px Verdana";
     if(dTutorialX > 0 && dTutorialX < 100 && dTutorialY > -20 && dTutorialY < 20){
-        ctx.font = "30px Verdana";
+        ctx.font = "40px Verdana";
     }
     ctx.fillText("Tutorial", cv.width/8, cv.height*1.5/4);
-    ctx.font = "20px Verdana";
+    ctx.font = "30px Verdana";
     if(dPlayX > 0 && dPlayX < 100 && dPlayY > -20 && dPlayY < 20){
-        ctx.font = "30px Verdana";
+        ctx.font = "40px Verdana";
     }
-    ctx.fillText("Play", cv.width/8, cv.height*1.5/4+cv.height*1/12);
+    ctx.fillText("Play", cv.width/8, cv.height*1.5/4+cv.height*1.5/12);
     
     //ctx.fillText("Settings", cv.width/8, cv.height*1.5/4+cv.height*2/12);
 }
