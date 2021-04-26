@@ -12,6 +12,7 @@ function World(tutorial){
     if(this.tutorial) {
         this.gems = [new Gem(-60, -100, 0, 15, 15), new Gem(60, -30, 0, 15, 15)];
     }
+    this.startGemNumber = this.gems.length;
     this.cam = {x:-200, y:0, z:0};
     this.time = 0;
     this.saveTime = 0;
@@ -48,7 +49,12 @@ World.prototype.update = function(keyList, dt){
             case 0: 
                 if(this.player.state == "fall") this.tutorialState++;
                 break;
-            
+            case 1:
+                if(keyList[88]) this.tutorialState++;
+                break;
+            case 2:
+                if(this.gems.length == 0) this.tutorialState++;
+                break;
         }
     }
 
@@ -104,9 +110,8 @@ World.prototype.draw = function(ctx, transparency){
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
                 ctx.fillText("You need to retrieve your gems !", cv.width / 2, cv.height / 8);
-                ctx.fillText("Use arrows keys to move.", cv.width / 2, cv.height * 1.5/ 8);
+                ctx.fillText("Use the arrows keys to move.", cv.width / 2, cv.height * 1.5/ 8);
                 ctx.restore();
-
                 break;
 
             case 1:
@@ -118,8 +123,28 @@ World.prototype.draw = function(ctx, transparency){
                 ctx.fillText("Press x to fall faster", cv.width / 2, cv.height * 1.5/ 8);
                 ctx.restore();
                 break;
+            case 3:
+                ctx.fillStyle = "white";
+                ctx.save();
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("You are now ready to play the game!", cv.width / 2, cv.height / 8);
+                ctx.fillText("Press Enter to start and catch the 12 gems as fast as possible!", cv.width / 2, cv.height * 1.5/ 8);
+                //ctx.fillText("Press Enter to start", cv.width / 2, cv.height * 2 / 8);
+                ctx.restore();
+                break;
         }
     }
+    if(!this.tutorial || this.tutorialState >= 1){
+        ctx.font = "20px Verdana";
+        ctx.fillStyle = "white";
+        ctx.save();
+        //ctx.textAlign = "left";
+        //ctx.textBaseline = "middle";
+        ctx.fillText("Gems: "+(this.startGemNumber-this.gems.length)+"/"+this.startGemNumber, cv.width / 20, cv.width/20);
+        ctx.restore();
+    }
+
 
     /*let dz = this.player.z-this.cam.z;
     for(let i = 0; i < this.gems.length; i++){

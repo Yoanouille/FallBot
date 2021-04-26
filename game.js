@@ -32,6 +32,10 @@ Game.prototype.update = function(dt, keyList, ctx){
             this.lastR = keyList[82];
             this.world.draw(ctx);
             this.world.update(keyList, dt);
+            if(this.world.tutorialState == 3 && keyList[13]){
+                this.world = new World();
+                this.scene = "game";
+            }
             break;
         case "game":
             if(keyList[82] && !this.lastR){
