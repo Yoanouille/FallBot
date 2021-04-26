@@ -291,6 +291,7 @@ Player.prototype.collision = function(world, lastZ) {
     for(let i = 0; i < world.platforms.length; i++) {
         let z = world.platforms[i].z;
         if(lastZ+this.feetDist <= z && this.z+this.feetDist >= z && rectCollision(this, world.platforms[i])) {
+            landSound.play();
             this.state = "walk";
             this.z = z - this.feetDist-0.0001;
             this.zspd = 0;
@@ -314,6 +315,7 @@ Player.prototype.collectGems = function(gems){
             g.y += dy*.4;
             g.z += (dz/100)*.4;
             if(d < this.catchRadius){
+                collectSound.play();
                 console.log("CATCH");
                 gems.splice(i, 1);
                 i--;
@@ -324,6 +326,7 @@ Player.prototype.collectGems = function(gems){
 
 Player.prototype.isOnPlatform = function() {
     if(!rectCollision(this, this.platformStop)) {
+        jumpSound.play();
         this.state = "fall";
         this.zspd = -0.7;
     }
