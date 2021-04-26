@@ -34,7 +34,7 @@ Game.prototype.update = function(dt, keyList, ctx){
             this.world.update(keyList, dt);
             if(this.world.tutorialState == 3 && keyList[13]){
                 this.world = new World();
-                this.scene = "game";
+                this.screen = "game";
             }
             break;
         case "game":
