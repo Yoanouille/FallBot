@@ -42,6 +42,19 @@ Gem.prototype.update = function(dt, world){
     }
 }
 
+Gem.prototype.calculeShadow = function(world, cam) {
+    world.platforms.sort(function(a, b){
+        return a.z-b.z;
+    });
+    for(let i = 0; i < world.platforms.length; i++){
+        if(this.z <= world.platforms[i].z && rectCollision(this, world.platforms[i])){
+            let d = this.z-cam.z;
+            if(d < .2) d = .2;
+            if(d > 0) return new Shadow(this.x+this.w/2-(this.w/d)/2, this.y+this.h/2-(this.h/d)/2, world.platforms[i].z, this.w/d, this.h/d);
+        }
+    }
+}
+
 Gem.prototype.collision = function(world, lastZ) {
     for(let i = 0; i < world.platforms.length; i++) {
         let z = world.platforms[i].z;
@@ -62,18 +75,6 @@ Gem.prototype.collision = function(world, lastZ) {
 }
 
 Gem.prototype.draw = function(cam, ctx, world){
-    world.platforms.sort(function(a, b){
-        return a.z-b.z;
-    });
-    for(let i = 0; i < world.platforms.length; i++){
-        if(this.z <= world.platforms[i].z && rectCollision(this, world.platforms[i])){
-            ctx.fillStyle = "rgba(20, 20, 20, 0.2)";
-            let d = this.z-cam.z;
-            if(d < .2) d = .2;
-            if(d > 0) drawRectangle({x:this.x+this.w/2-(this.w/d)/2, y:this.y+this.h/2-(this.h/d)/2, z:world.platforms[i].z, w:this.w/d, h:this.h/d}, cam, ctx);
-            break;
-        }
-    }
     ctx.fillStyle = "red";
     drawRectangle(this, cam, ctx);
 }

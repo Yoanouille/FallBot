@@ -49,8 +49,17 @@ World.prototype.genProfondeur = function() {
 World.prototype.draw = function(ctx){
     ctx.fillStyle = "rgb(20, 20, 20)";
     ctx.fillRect(0, 0, cv.width, cv.height);
-    let drawList = this.platforms.concat(this.gems);
+    let drawList = [];
     drawList.push(this.player);
+    drawList = drawList.concat(this.gems);
+    //console.log(drawList);
+    for(let i = 0; i < this.gems.length; i++) {
+        let shadow = this.gems[i].calculeShadow(this, this.cam)
+        //console.log(shadow);
+
+        if(shadow != undefined) drawList.push(shadow);
+    }
+    drawList = drawList.concat(this.platforms);
     drawList.sort(function(a, b){
         return b.z-a.z;
     });
