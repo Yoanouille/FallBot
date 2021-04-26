@@ -22,7 +22,7 @@ Game.prototype.update = function(dt, keyList, ctx){
     this.time += dt;
     switch(this.screen){
         case "menu":
-            this.drawMenu(ctx);
+            this.menu(ctx);
             break;
         case "game":
             if(keyList[82] && !this.lastR){
@@ -37,9 +37,10 @@ Game.prototype.update = function(dt, keyList, ctx){
             this.end();
             break;
     }
+    this.mouse.lastDown = this.mouse.down;
 }
 
-Game.prototype.drawMenu = function(ctx){
+Game.prototype.menu = function(ctx){
     let cv = ctx.canvas;
     ctx.fillStyle = "rgb(20, 20, 20)";
     ctx.fillRect(0, 0, cv.width, cv.height);
@@ -50,6 +51,7 @@ Game.prototype.drawMenu = function(ctx){
     w.gems = [];
     w.platforms = [new Platform(-100, -50, .3, 200, 100)]
     w.player = this.p;
+    w.cam = {x:0, y:0, z:0};
     ctx.save()
     ctx.translate(200, 0);
     //this.p.update({up:this.p.yspd > -10 && Math.sin(this.time*5) > 0, down: this.p.yspd > 10 && Math.sin(this.time*5) < 0, left: this.p.xspd > -50 && Math.sin(this.time*5) > 0, right: this.p.xspd < 50 && Math.sin(this.time*5) < 0, accelerate: false}, 1/30, w);
@@ -64,23 +66,34 @@ Game.prototype.drawMenu = function(ctx){
 
     ctx.fillStyle = "white";
     ctx.font = "80px Verdana";
-    ctx.fillText("FALLBOT", cv.width/8, cv.height*0.8/4);
+    ctx.fillText("FALLBOT", cv.width*0.5/8, cv.height*1/4);
 
-    let dPlayX = mouse.x - cv.width/8;
-    let dPlayY = mouse.y - cv.height*1.5/4-cv.height*1.5/12;
+    let dPlayX = mouse.x - cv.width*0.5/8;
+    let dPlayY = mouse.y - cv.height*1.7/4-cv.height*1.5/12;
+    let playSelected = false;
 
-    let dTutorialX = mouse.x - cv.width/8;
-    let dTutorialY = mouse.y - cv.height*1.5/4;
+    let dTutorialX = mouse.x - cv.width*0.5/8;
+    let dTutorialY = mouse.y - cv.height*1.7/4;
+    let tutorialSelected = false;
     ctx.font = "30px Verdana";
     if(dTutorialX > 0 && dTutorialX < 100 && dTutorialY > -20 && dTutorialY < 20){
         ctx.font = "40px Verdana";
+        tutorialSelected = true;
     }
-    ctx.fillText("Tutorial", cv.width/8, cv.height*1.5/4);
+    ctx.fillText("Tutorial", cv.width*0.5/8, cv.height*1.7/4);
     ctx.font = "30px Verdana";
     if(dPlayX > 0 && dPlayX < 100 && dPlayY > -20 && dPlayY < 20){
         ctx.font = "40px Verdana";
+        playSelected = true;
     }
-    ctx.fillText("Play", cv.width/8, cv.height*1.5/4+cv.height*1.5/12);
+    ctx.fillText("Play", cv.width*0.5/8, cv.height*1.7/4+cv.height*1.5/12);
+
+    if(this.mouse.down && !this.mouse.lastDown){
+        if(playSelected && !tutorialSelected){
+            this.screen = "game";
+        }
+    }
+
     
     //ctx.fillText("Settings", cv.width/8, cv.height*1.5/4+cv.height*2/12);
 }
