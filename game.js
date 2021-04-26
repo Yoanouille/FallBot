@@ -24,6 +24,15 @@ Game.prototype.update = function(dt, keyList, ctx){
         case "menu":
             this.menu(ctx);
             break;
+
+        case "tutorial":
+            if(keyList[82] && !this.lastR){
+                this.world = new World(true);
+            }
+            this.lastR = keyList[82];
+            this.world.draw(ctx);
+            this.world.update(keyList, dt);
+            break;
         case "game":
             if(keyList[82] && !this.lastR){
                 this.world = new World();
@@ -91,6 +100,12 @@ Game.prototype.menu = function(ctx){
     if(this.mouse.down && !this.mouse.lastDown){
         if(playSelected && !tutorialSelected){
             this.screen = "game";
+            this.world = new World();
+        }
+
+        if(tutorialSelected && !playSelected) {
+            this.screen = "tutorial";
+            this.world = new World(true);
         }
     }
 

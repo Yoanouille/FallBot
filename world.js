@@ -1,13 +1,22 @@
-function World(){
+function World(tutorial){
+    this.tutorial = true;
+    if(tutorial == undefined) this.tutorial = tutorial;
     this.player = new Player(-25, -25, .29, 50, 50);
+    this.player.state = "walk";
     this.platforms = [new Platform(-100, -50, .4, 200, 100), new Platform(-80, 30, 15,500, 200), new Platform(-20, -50, 20, 100, 100)];
+    this.player.platformStop = this.platforms[0];
     this.gems = [new Gem(-20, -20, 2, 15, 15), new Gem(60, -20, 2, 15, 15)];
     for(let i = 0; i < 10; i++){
         this.gems.push(new Gem(Math.random()*200-100, Math.random()*200-100, 0, 15, 15));
     }
+    if(this.tutorial) {
+        this.gems = [new Gem(-60, -100, 0, 15, 15), new Gem(60, -30, 0, 15, 15)];
+    }
     this.cam = {x:-200, y:0, z:0};
     this.time = 0;
+    this.saveTime = 0;
     this.nbPlatformPerPro = 75;
+    this.tutorialState = 0;
 }
 
 World.prototype.update = function(keyList, dt){
@@ -33,6 +42,16 @@ World.prototype.update = function(keyList, dt){
     for(let i = 0; i < this.gems.length; i++){
         this.gems[i].update(dt, this);
     }
+
+    if(this.tutorial) {
+        switch(this.tutorialState) {
+            case 0: 
+                if(this.player.state == "fall") this.tutorialState++;
+                break;
+            
+        }
+    }
+
 }
 
 World.prototype.genProfondeur = function() {
@@ -76,6 +95,31 @@ World.prototype.draw = function(ctx, transparency){
         drawList[i].draw(this.cam, ctx, this, transparency);
     }
 
+    if(this.tutorial) {
+        ctx.font = "30px Verdana";
+        switch(this.tutorialState) {
+            case 0:
+                ctx.fillStyle = "white";
+                ctx.save();
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("You need to retrieve your gems !", cv.width / 2, cv.height / 8);
+                ctx.fillText("Use arrows keys to move.", cv.width / 2, cv.height * 1.5/ 8);
+                ctx.restore();
+
+                break;
+
+            case 1:
+                ctx.fillStyle = "white";
+                ctx.save();
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("Follow the red arrows to retrieve your gems", cv.width / 2, cv.height / 8);
+                ctx.fillText("Press x to fall faster", cv.width / 2, cv.height * 1.5/ 8);
+                ctx.restore();
+                break;
+        }
+    }
 
     /*let dz = this.player.z-this.cam.z;
     for(let i = 0; i < this.gems.length; i++){
