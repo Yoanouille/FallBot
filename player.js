@@ -33,6 +33,7 @@ function Player(x, y, z, w, h) {
 
     this.attractRadius = 50;
     this.catchRadius = 20;
+    this.lastAccelerate = false;
 }
 
 Player.prototype.drawMenu = function(cam, ctx, world, transparency, angle) {
@@ -246,6 +247,13 @@ Player.prototype.update = function(keys, dt, world) {
         }
 
         lastZ = this.z;
+        if(keys.accelerate && !this.lastAccelerate){
+            fallSound.play();
+        }
+        
+        if(!keys.accelerate && this.lastAccelerate){
+            fallSound.stop();
+        }
         if(keys.accelerate) this.decelerating = true;
 
         let grav = (keys.accelerate ? this.ACCgrav : this.grav);
@@ -285,6 +293,7 @@ Player.prototype.update = function(keys, dt, world) {
     }
 
     this.collectGems(world.gems);
+    this.lastAccelerate = keys.accelerate;
 }
 
 Player.prototype.collision = function(world, lastZ) {
