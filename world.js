@@ -14,6 +14,7 @@ function World(tutorial){
     if(this.tutorial) {
         this.gems = [new Gem(-60, -100, 0, 15, 15), new Gem(60, -30, 0, 15, 15)];
     }
+    this.particles = [];
     this.startGemNumber = this.gems.length;
     this.cam = {x:-200, y:0, z:0};
     this.time = 0;
@@ -40,12 +41,26 @@ World.prototype.update = function(keyList, dt){
             break;
         }
     }
+
+    for(let i = 0; i < this.particles.length; i++){
+        if(this.particles[i].z < this.cam.z || this.particles[i].life <= 0) {
+            this.particles.shift();
+            i--;
+        } else {
+            break;
+        }
+    }
+
     if(this.platforms.length <= this.nbPlatformPerPro) {
         this.genProfondeur();
     }
 
     for(let i = 0; i < this.gems.length; i++){
         this.gems[i].update(dt, this);
+    }
+
+    for(let i = 0; i < this.particles.length; i++){
+        this.particles[i].update(dt);
     }
 
     if(this.tutorial) {
@@ -106,6 +121,7 @@ World.prototype.draw = function(ctx, transparency){
         if(shadow != undefined) drawList.push(shadow);
     }
     drawList = drawList.concat(this.platforms);
+    drawList = drawList.concat(this.particles);
     drawList.sort(function(a, b){
         return b.z-a.z;
     });

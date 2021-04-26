@@ -263,6 +263,11 @@ Player.prototype.update = function(keys, dt, world) {
 
         this.collision(world, lastZ);
     } else if(this.state == "walk") {
+        if(Math.sqrt(this.xspd*this.xspd+this.yspd*this.yspd) > 200 && Math.random()<.5){
+            let a = Math.random()*Math.PI*2;
+            let r = Math.random()*0+0;
+            world.particles.push(new Particle(this.x+(Math.random()>.5?this.w:0)+Math.cos(a)*r, this.y+(Math.random()>.5?this.h:0)+Math.sin(a)*r, this.z+this.feetDist-.001, 4, 4, Math.cos(a)*20, Math.sin(a)*20, -2, 4, 1));
+        }
 
         if(d == 0){
             this.xspd *= Math.pow(.0001, dt);
@@ -293,6 +298,11 @@ Player.prototype.collision = function(world, lastZ) {
         let z = world.platforms[i].z;
         if(lastZ+this.feetDist <= z && this.z+this.feetDist >= z && rectCollision(this, world.platforms[i])) {
             landSound.play();
+            for(let i = 0; i < 10; i++){
+                let a = Math.random()*Math.PI*2;
+                let r = Math.random()*20+10;
+                world.particles.push(new Particle(this.x+this.w/2+Math.cos(a)*r, this.y+this.h/2+Math.sin(a)*r, this.z+this.feetDist-.001, 4, 4, Math.cos(a)*20, Math.sin(a)*20, -2, 4, 1));
+            }
             this.state = "walk";
             this.z = z - this.feetDist-0.0001;
             this.zspd = 0;
