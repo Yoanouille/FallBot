@@ -38,6 +38,7 @@ Gem.prototype.update = function(dt, world){
             this.xspd *= Math.pow(.01, dt);
             this.yspd *= Math.pow(.01, dt);
         }
+        if(this.z > world.player.z+20) this.z = world.player.z+20;
     }
 }
 
@@ -46,7 +47,7 @@ Gem.prototype.collision = function(world, lastZ) {
         let z = world.platforms[i].z;
         if(lastZ <= z && this.z >= z && rectCollision(this, world.platforms[i])) {
             this.z = z-0.0001;
-            this.zspd *= -0.7;
+            this.zspd *= -0.5;
             if(this.zspd > -1){
                 this.zspd = -1;
             }

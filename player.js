@@ -17,9 +17,9 @@ function Player(x, y, z, w, h) {
     this.maxZSpd = 5;
 
     this.accWalk = 2000;
-    this.spdWalk = 250;
-    this.acc = 800;
-    this.spd = 300;
+    this.spdWalk = 400;
+    this.acc = 1200;
+    this.spd = 600;
 
     this.ACCgrav = 10;
     this.ACCspd = 10;

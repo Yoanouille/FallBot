@@ -1,7 +1,10 @@
 function World(){
     this.player = new Player(-25, -25, 1, 50, 50);
     this.platforms = [new Platform(0, -50, 10, 300, 400), new Platform(-80, 30, 15,500, 200), new Platform(-20, -50, 20, 100, 100)];
-    this.gems = [new Gem(-20, -20, 2, 10, 10), new Gem(60, -20, 2, 10, 10)];
+    this.gems = [new Gem(-20, -20, 2, 15, 15), new Gem(60, -20, 2, 15, 15)];
+    for(let i = 0; i < 10; i++){
+        this.gems.push(new Gem(Math.random()*200-100, Math.random()*200-100, Math.random()*5, 15, 15));
+    }
     this.cam = {x:0, y:0, z:0};
     this.time = 0;
     this.nbPlatformPerPro = 75;
