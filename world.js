@@ -167,13 +167,13 @@ World.prototype.draw = function(ctx, transparency){
 
     if(!this.tutorial && this.gameState == 1) {
         ctx.fillStyle = "white";
+        ctx.font = "30px Verdana";
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("Congratulations !!! ", cv.width / 2, cv.height / 8);
         let t = this.endtime;
-        ctx.fillText("Your time is " + (t<10*60?"0":"")+Math.floor(Math.floor(t)/60)+":"+(Math.floor(t)%60<10?"0":"")+Math.floor(t)%60, cv.width / 2, cv.height * 1.5/ 8);
-        ctx.fillText("Press r to restart", cv.width / 2, cv.height * 2 / 8);
+        ctx.fillText("Congratulations !!! Your time is " + (t<10*60?"0":"")+Math.floor(Math.floor(t)/60)+":"+(Math.floor(t)%60<10?"0":"")+Math.floor(t)%60, cv.width / 2, cv.height * 1.5/ 8);
+        ctx.fillText("Press R to restart", cv.width / 2, cv.height * 2 / 8);
         ctx.restore();
     }
 
