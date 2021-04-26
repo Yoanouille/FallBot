@@ -49,7 +49,7 @@ World.prototype.genProfondeur = function() {
 World.prototype.draw = function(ctx){
     ctx.fillStyle = "rgb(20, 20, 20)";
     ctx.fillRect(0, 0, cv.width, cv.height);
-    let drawList = this.platforms.concat(this.gems);
+    let drawList = [];
 
     for(let i = 0; i < this.gems.length; i++){
         let dx = this.gems[i].x - this.player.x;
@@ -58,8 +58,16 @@ World.prototype.draw = function(ctx){
         let d = Math.sqrt(dx*dx + dy*dy + dz*dz);
         drawList.push(new Arrow(this.player.x+this.player.w/2+70*dx/d, this.player.y+this.player.h/2+70*dy/d, this.player.z+1.*dz/d, this.player.x+this.player.w/2+120*dx/d, this.player.y+this.player.h/2+120*dy/d, this.player.z+1.2*dz/d, this.gems[i].color));
     }
-
     drawList.push(this.player);
+    drawList = drawList.concat(this.gems);
+    //console.log(drawList);
+    for(let i = 0; i < this.gems.length; i++) {
+        let shadow = this.gems[i].calculeShadow(this, this.cam)
+        //console.log(shadow);
+
+        if(shadow != undefined) drawList.push(shadow);
+    }
+    drawList = drawList.concat(this.platforms);
     drawList.sort(function(a, b){
         return b.z-a.z;
     });
