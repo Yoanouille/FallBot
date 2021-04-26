@@ -6,7 +6,7 @@ function Platform(x, y, z, w, h){
     this.h = h;
 }
 
-Platform.prototype.draw = function(cam, ctx, world) {
+Platform.prototype.draw = function(cam, ctx, world, transparency) {
     ctx.fillStyle = "rgb(138, 120, 81)";
-    drawRectangle(this, cam, ctx);
+    drawRectangle(this, cam, ctx, transparency);
 }

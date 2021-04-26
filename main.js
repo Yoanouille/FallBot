@@ -15,6 +15,8 @@ window.addEventListener('keyup',function(event){
     keyList[event.keyCode] = false;
 });
 
+let mouse = {x: 0, y: 0};
+onmousemove = function(e){mouse = {x: e.clientX, y: e.clientY};}
 
-let game = new Game();
+let game = new Game(mouse);
 game.start(keyList, ctx);

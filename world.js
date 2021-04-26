@@ -46,7 +46,7 @@ World.prototype.genProfondeur = function() {
     }
 }
 
-World.prototype.draw = function(ctx){
+World.prototype.draw = function(ctx, transparency){
     ctx.fillStyle = "rgb(20, 20, 20)";
     ctx.fillRect(0, 0, cv.width, cv.height);
     let drawList = [];
@@ -73,7 +73,7 @@ World.prototype.draw = function(ctx){
     });
 
     for(let i = 0; i < drawList.length; i++){
-        drawList[i].draw(this.cam, ctx, this);
+        drawList[i].draw(this.cam, ctx, this, transparency);
     }
 
 

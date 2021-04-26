@@ -1,6 +1,6 @@
-function drawRectangle(rect, cam, ctx){
+function drawRectangle(rect, cam, ctx, transparency){
     let dz = rect.z-cam.z;
-    if(dz >= 1){
+    if(dz >= 1 || transparency != undefined){
         let cv = ctx.canvas;
         ctx.fillRect((rect.x-cam.x)/dz+cv.width/2, (rect.y-cam.y)/dz+cv.height/2, rect.w/dz, rect.h/dz);
         tmp = ctx.fillStyle;

@@ -35,7 +35,7 @@ function Player(x, y, z, w, h) {
     this.catchRadius = 20;
 }
 
-Player.prototype.draw = function(cam, ctx, world) {
+Player.prototype.drawMenu = function(cam, ctx, world, transparency, angle) {
     
     let coeff = .01;
     let accAnim = Math.max(0, this.zspd-this.maxZSpd);
@@ -105,12 +105,106 @@ Player.prototype.draw = function(cam, ctx, world) {
     //drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2, y:this.y-this.feetHDist-this.footSize/2, z:this.z+this.feetDist, w:this.footSize, h:this.footSize}, cam, ctx);
     //drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2, y:this.y+this.h+this.feetHDist-this.footSize/2, z:this.z+this.feetDist, w:this.footSize, h:this.footSize}, cam, ctx);
     
-    drawRectangle({x:this.x-this.feetHDist-this.footSize/2+lux, y:this.y-this.feetHDist-this.footSize/2+luy, z:this.z+this.feetDist+luz, w:this.footSize, h:this.footSize}, cam, ctx);
-    drawRectangle({x:this.x-this.feetHDist-this.footSize/2+ldx, y:this.y+this.h+this.feetHDist-this.footSize/2+ldy, z:this.z+this.feetDist+ldz, w:this.footSize, h:this.footSize}, cam, ctx);
-    drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rux, y:this.y-this.feetHDist-this.footSize/2+ruy, z:this.z+this.feetDist+ruz, w:this.footSize, h:this.footSize}, cam, ctx);
-    drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rdx, y:this.y+this.h+this.feetHDist-this.footSize/2+rdy, z:this.z+this.feetDist+rdz, w:this.footSize, h:this.footSize}, cam, ctx);
+    drawRectangle({x:this.x-this.feetHDist-this.footSize/2+lux, y:this.y-this.feetHDist-this.footSize/2+luy, z:this.z+this.feetDist+luz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
+    drawRectangle({x:this.x-this.feetHDist-this.footSize/2+ldx, y:this.y+this.h+this.feetHDist-this.footSize/2+ldy, z:this.z+this.feetDist+ldz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
+    drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rux, y:this.y-this.feetHDist-this.footSize/2+ruy, z:this.z+this.feetDist+ruz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
+    drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rdx, y:this.y+this.h+this.feetHDist-this.footSize/2+rdy, z:this.z+this.feetDist+rdz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
     //ctx.fillStyle = "rgb(104, 107, 140)";
-    drawRectangle(this, cam, ctx);
+    drawRectangle(this, cam, ctx, transparency);
+
+    let speed = Math.sqrt(this.xspd*this.xspd+this.yspd*this.yspd);
+    //if(speed != 0) {
+        this.angle = Math.atan2(this.yspd, this.xspd);
+    //}
+
+    let dz = this.z-cam.z;
+    ctx.save();
+    ctx.translate((this.x + this.w / 2-cam.x)/dz+ctx.canvas.width/2, (this.y + this.h / 2 -cam.y)/dz+ctx.canvas.height/2);
+    ctx.rotate(angle);
+    ctx.fillStyle = "rgb(150, 157, 190)";
+    ctx.fillRect(-15 / dz, -15 / dz, 30 / dz, 30 / dz);
+    ctx.fillStyle = "rgb(0, 7,0)";
+    ctx.fillRect(9 / dz, -6 / dz, 2 / dz, 2 / dz);
+    ctx.fillRect(9 / dz, 4 / dz, 2 / dz, 2 / dz);
+    ctx.restore();
+}
+
+Player.prototype.draw = function(cam, ctx, world, transparency) {
+    
+    let coeff = .01;
+    let accAnim = Math.max(0, this.zspd-this.maxZSpd);
+    let lux = -this.yspd*coeff+accAnim;
+    let luy = -this.xspd*coeff+accAnim;
+    let ldx = this.yspd*coeff+accAnim;
+    let ldy = this.xspd*coeff-accAnim;
+    let rux = this.yspd*coeff-accAnim;
+    let ruy = this.xspd*coeff+accAnim;
+    let rdx = -this.yspd*coeff-accAnim;
+    let rdy = -this.xspd*coeff-accAnim;
+
+    let luz = 0;
+    let ldz = 0;
+    let ruz = 0;
+    let rdz = 0;
+    if(this.state == "walk"){
+        let c = .0005;
+        let s = 10;
+        let speed = Math.sqrt(this.xspd*this.xspd+this.yspd*this.yspd);
+        luz -= Math.abs(Math.sin(world.time*s)*c)*speed;
+        ldz -= Math.abs(Math.sin(world.time*s+Math.PI/4)*c)*speed;
+        ruz -= Math.abs(Math.sin(world.time*s+2*Math.PI/4)*c)*speed;
+        rdz -= Math.abs(Math.sin(world.time*s+3*Math.PI/4)*c)*speed;
+    }
+
+    world.platforms.sort(function(a, b){
+        return a.z-b.z;
+    });
+    let shadow = {x:this.x, y:this.y, w:this.w, h:this.h};
+    for(let i = 0; i < world.platforms.length; i++){
+        if(this.z <= world.platforms[i].z && rectCollision(this, world.platforms[i])){
+
+            ctx.fillStyle = "rgba(20, 20, 20, 0.2)";
+            drawRectangle({x:this.x-this.feetHDist-this.footSize/2+lux, y:this.y-this.feetHDist-this.footSize/2+luy, z:world.platforms[i].z, w:this.footSize, h:this.footSize}, cam, ctx);
+            drawRectangle({x:this.x-this.feetHDist-this.footSize/2+ldx, y:this.y+this.h+this.feetHDist-this.footSize/2+ldy, z:world.platforms[i].z, w:this.footSize, h:this.footSize}, cam, ctx);
+            drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rux, y:this.y-this.feetHDist-this.footSize/2+ruy, z:world.platforms[i].z, w:this.footSize, h:this.footSize}, cam, ctx);
+            drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rdx, y:this.y+this.h+this.feetHDist-this.footSize/2+rdy, z:world.platforms[i].z, w:this.footSize, h:this.footSize}, cam, ctx);
+            drawRectangle({x:shadow.x, y:shadow.y, z:world.platforms[i].z, w:shadow.w, h:shadow.h}, cam, ctx);
+            break;
+            /*isShadowLeft = false;
+            if(shadow.x < world.platforms[i].x){
+                shadow.w = world.platforms[i].x-shadow.x;
+                isShadowLeft = true;
+            }
+            if(shadow.y < world.platforms[i].y){
+                shadow.h = world.platforms[i].y-shadow.y;
+                isShadowLeft = true;
+            }
+            if(shadow.x+shadow.w > world.platforms[i].x+world.platforms[i].w){
+                shadow.w = shadow.x+shadow.w - world.platforms[i].x+world.platforms[i].w;
+                shadow.x = world.platforms[i].x+world.platforms[i].w;
+                isShadowLeft = true;
+            }
+            if(shadow.y+shadow.h > world.platforms[i].y+world.platforms[i].h){
+                shadow.h = shadow.y+shadow.h - world.platforms[i].y+world.platforms[i].h;
+                shadow.y = world.platforms[i].y+world.platforms[i].h;
+                isShadowLeft = true;
+            }
+            
+            if(!isShadowLeft) break;*/
+        }
+    }
+    ctx.fillStyle = "rgb(104, 107, 140)";
+    //drawRectangle({x:this.x-this.feetHDist-this.footSize/2, y:this.y-this.feetHDist-this.footSize/2, z:this.z+this.feetDist, w:this.footSize, h:this.footSize}, cam, ctx);
+    //drawRectangle({x:this.x-this.feetHDist-this.footSize/2, y:this.y+this.h+this.feetHDist-this.footSize/2, z:this.z+this.feetDist, w:this.footSize, h:this.footSize}, cam, ctx);
+    //drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2, y:this.y-this.feetHDist-this.footSize/2, z:this.z+this.feetDist, w:this.footSize, h:this.footSize}, cam, ctx);
+    //drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2, y:this.y+this.h+this.feetHDist-this.footSize/2, z:this.z+this.feetDist, w:this.footSize, h:this.footSize}, cam, ctx);
+    
+    drawRectangle({x:this.x-this.feetHDist-this.footSize/2+lux, y:this.y-this.feetHDist-this.footSize/2+luy, z:this.z+this.feetDist+luz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
+    drawRectangle({x:this.x-this.feetHDist-this.footSize/2+ldx, y:this.y+this.h+this.feetHDist-this.footSize/2+ldy, z:this.z+this.feetDist+ldz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
+    drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rux, y:this.y-this.feetHDist-this.footSize/2+ruy, z:this.z+this.feetDist+ruz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
+    drawRectangle({x:this.x+this.w+this.feetHDist-this.footSize/2+rdx, y:this.y+this.h+this.feetHDist-this.footSize/2+rdy, z:this.z+this.feetDist+rdz, w:this.footSize, h:this.footSize}, cam, ctx, transparency);
+    //ctx.fillStyle = "rgb(104, 107, 140)";
+    drawRectangle(this, cam, ctx, transparency);
 
     let speed = Math.sqrt(this.xspd*this.xspd+this.yspd*this.yspd);
     //if(speed != 0) {
