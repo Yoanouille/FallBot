@@ -6,7 +6,7 @@ function World(tutorial){
     this.platforms = [new Platform(-100, -50, .4, 200, 100), new Platform(-80, 30, 15,500, 200), new Platform(-20, -50, 20, 100, 100)];
     this.player.platformStop = this.platforms[0];
     this.gems = [new Gem(-20, -20, 2, 15, 15), new Gem(60, -20, 2, 15, 15)];
-    for(let i = 0; i < 10; i++){
+    for(let i = 0; i < 0; i++){
         this.gems.push(new Gem(Math.random()*200-100, Math.random()*200-100, 0, 15, 15));
     }
     if(this.tutorial) {
@@ -15,8 +15,10 @@ function World(tutorial){
     this.startGemNumber = this.gems.length;
     this.cam = {x:-200, y:0, z:0};
     this.time = 0;
+    this.endtime = -1;
     this.saveTime = 0;
     this.nbPlatformPerPro = 75;
+    this.gameState = 0;
     this.tutorialState = 0;
 }
 
@@ -54,6 +56,15 @@ World.prototype.update = function(keyList, dt){
                 break;
             case 2:
                 if(this.gems.length == 0) this.tutorialState++;
+                break;
+        }
+    } else {
+        switch(this.gameState) {
+            case 0:
+                if(this.gems.length == 0) {
+                    this.gameState++;
+                    this.endtime = this.time;
+                }
                 break;
         }
     }
@@ -139,9 +150,30 @@ World.prototype.draw = function(ctx, transparency){
         ctx.font = "20px Verdana";
         ctx.fillStyle = "white";
         ctx.save();
-        //ctx.textAlign = "left";
-        //ctx.textBaseline = "middle";
-        ctx.fillText("Gems: "+(this.startGemNumber-this.gems.length)+"/"+this.startGemNumber, cv.width / 20, cv.width/20);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Gems: "+(this.startGemNumber-this.gems.length)+"/"+this.startGemNumber, cv.width * 2 / 20, cv.height/20);
+        ctx.restore();
+    }
+
+    ctx.save();
+    ctx.font = "20px Verdana";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    let t = (this.endtime == -1 ? this.time : this.endtime);
+    ctx.fillText((t<10*60?"0":"")+Math.floor(Math.floor(t)/60)+":"+(Math.floor(t)%60<10?"0":"")+Math.floor(t)%60, cv.width * 19 / 20, cv.height * 1 / 20);
+    ctx.restore();
+
+    if(!this.tutorial && this.gameState == 1) {
+        ctx.fillStyle = "white";
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Congratulations !!! ", cv.width / 2, cv.height / 8);
+        let t = this.endtime;
+        ctx.fillText("Your time is " + (t<10*60?"0":"")+Math.floor(Math.floor(t)/60)+":"+(Math.floor(t)%60<10?"0":"")+Math.floor(t)%60, cv.width / 2, cv.height * 1.5/ 8);
+        ctx.fillText("Press r to restart", cv.width / 2, cv.height * 2 / 8);
         ctx.restore();
     }
 
