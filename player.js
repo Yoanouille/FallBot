@@ -247,14 +247,6 @@ Player.prototype.update = function(keys, dt, world) {
         }
 
         lastZ = this.z;
-        if(keys.accelerate && !this.lastAccelerate){
-            fallSound.play();
-        }
-        
-        if(!keys.accelerate && this.lastAccelerate){
-            fallSound.stop();
-        }
-        if(keys.accelerate) this.decelerating = true;
 
         let grav = (keys.accelerate ? this.ACCgrav : this.grav);
         if(!keys.accelerate && this.decelerating) grav = -this.ACCgrav;

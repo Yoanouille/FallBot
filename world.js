@@ -6,8 +6,10 @@ function World(tutorial){
     this.platforms = [new Platform(-100, -50, .4, 200, 100), new Platform(-80, 30, 15,500, 200), new Platform(-20, -50, 20, 100, 100)];
     this.player.platformStop = this.platforms[0];
     this.gems = [new Gem(-20, -20, 2, 15, 15), new Gem(60, -20, 2, 15, 15)];
-    for(let i = 0; i < 0; i++){
-        this.gems.push(new Gem(Math.random()*200-100, Math.random()*200-100, 0, 15, 15));
+    for(let i = 0; i < 10; i++){
+        let a = Math.random()*Math.PI*2;
+        let r = Math.random()*500+200;
+        this.gems.push(new Gem(Math.cos(a)*r, Math.sin(a)*r, 0, 15, 15));
     }
     if(this.tutorial) {
         this.gems = [new Gem(-60, -100, 0, 15, 15), new Gem(60, -30, 0, 15, 15)];
@@ -17,7 +19,7 @@ function World(tutorial){
     this.time = 0;
     this.endtime = -1;
     this.saveTime = 0;
-    this.nbPlatformPerPro = 75;
+    this.nbPlatformPerPro = 400;
     this.gameState = 0;
     this.tutorialState = 0;
 }
@@ -78,7 +80,7 @@ World.prototype.genProfondeur = function() {
         let p = this.player;
         let w =  Math.random() * 1000 + 300;
         let h =  Math.random() * 1000 + 300;
-        this.platforms.push(new Platform(p.x + Math.random() * 8000 - 4000 - w / 2, p.y + Math.random() * 8000 - 4000 - h / 2, pro + Math.random() * 15 + 3,w, h));
+        this.platforms.push(new Platform(p.x + Math.random() * 20000 - 10000 - w / 2, p.y + Math.random() * 20000 - 10000 - h / 2, pro + Math.random() * 15 + 3,w, h));
     }
 }
 
@@ -156,14 +158,17 @@ World.prototype.draw = function(ctx, transparency){
         ctx.restore();
     }
 
-    ctx.save();
-    ctx.font = "20px Verdana";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    let t = (this.endtime == -1 ? this.time : this.endtime);
-    ctx.fillText((t<10*60?"0":"")+Math.floor(Math.floor(t)/60)+":"+(Math.floor(t)%60<10?"0":"")+Math.floor(t)%60, cv.width * 19 / 20, cv.height * 1 / 20);
-    ctx.restore();
+    if(!this.tutorial){
+        ctx.save();
+        ctx.font = "20px Verdana";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        let t = (this.endtime == -1 ? this.time : this.endtime);
+        ctx.fillText((t<10*60?"0":"")+Math.floor(Math.floor(t)/60)+":"+(Math.floor(t)%60<10?"0":"")+Math.floor(t)%60, cv.width * 19 / 20, cv.height * 1 / 20);
+        ctx.restore();
+    }
+
 
     if(!this.tutorial && this.gameState == 1) {
         ctx.fillStyle = "white";
