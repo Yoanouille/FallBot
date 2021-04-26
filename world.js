@@ -50,6 +50,15 @@ World.prototype.draw = function(ctx){
     ctx.fillStyle = "rgb(20, 20, 20)";
     ctx.fillRect(0, 0, cv.width, cv.height);
     let drawList = this.platforms.concat(this.gems);
+
+    for(let i = 0; i < this.gems.length; i++){
+        let dx = this.gems[i].x - this.player.x;
+        let dy = this.gems[i].y - this.player.y;
+        let dz = (this.gems[i].z - this.player.z)*50;
+        let d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        drawList.push(new Arrow(this.player.x+this.player.w/2+70*dx/d, this.player.y+this.player.h/2+70*dy/d, this.player.z+1.*dz/d, this.player.x+this.player.w/2+120*dx/d, this.player.y+this.player.h/2+120*dy/d, this.player.z+1.2*dz/d, this.gems[i].color));
+    }
+
     drawList.push(this.player);
     drawList.sort(function(a, b){
         return b.z-a.z;
@@ -60,7 +69,7 @@ World.prototype.draw = function(ctx){
     }
 
 
-    let dz = this.player.z-this.cam.z;
+    /*let dz = this.player.z-this.cam.z;
     for(let i = 0; i < this.gems.length; i++){
         let dx = this.gems[i].x - this.player.x;
         let dy = this.gems[i].y - this.player.y;
@@ -68,5 +77,5 @@ World.prototype.draw = function(ctx){
         let angle = Math.atan2(dy, dx);
         ctx.strokeStyle = this.gems[i].color;
         drawTriangle((this.player.x + this.player.w / 2 - this.cam.x )/dz +ctx.canvas.width/2, (this.player.y + this.player.h / 2 -this.cam.y)/dz+ctx.canvas.height/2,angle - Math.PI / 2, 75, 55, 10);
-    }
+    }*/
 }
