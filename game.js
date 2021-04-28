@@ -1,7 +1,7 @@
 function Game(mouse){
     this.interval;
     this.screen = "menu";
-    this.world = new World();
+    this.world = new World2();
     this.lastR = false;
     this.time = 0;
     this.p = new Player(-25, -25, .299, 50, 50);
@@ -39,7 +39,7 @@ Game.prototype.update = function(dt, keyList, ctx){
             break;
         case "game":
             if(keyList[82] && !this.lastR){
-                this.world = new World();
+                this.world = new World2();
             }
             this.lastR = keyList[82];
             this.world.draw(ctx);
@@ -104,7 +104,7 @@ Game.prototype.menu = function(ctx){
     if(this.mouse.down && !this.mouse.lastDown){
         if(playSelected && !tutorialSelected){
             this.screen = "game";
-            this.world = new World();
+            this.world = new World2();
         }
 
         if(tutorialSelected && !playSelected) {

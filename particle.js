@@ -1,4 +1,4 @@
-function Particle(x, y, z, w, h, xspd, yspd, zspd, grav, life){
+function Particle(x, y, z, w, h, xspd, yspd, zspd, grav, life, color){
     this.x = x;
     this.y = y;
     this.z = z;
@@ -10,6 +10,7 @@ function Particle(x, y, z, w, h, xspd, yspd, zspd, grav, life){
     this.life = life;
     this.startLife = life;
     this.grav = grav;
+    this.color = color;
 }
 Particle.prototype.update = function(dt){
     this.life -= dt;
@@ -22,5 +23,10 @@ Particle.prototype.update = function(dt){
 
 Particle.prototype.draw = function(cam, ctx, world){
     ctx.fillStyle = "rgba(235, 212, 160,"+Math.max(this.life/this.startLife, 0)+")";
+    if(this.color != undefined){
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = Math.max(this.life/this.startLife, 0);
+    }
     drawRectangle(this, cam, ctx);
+    ctx.globalAlpha = 1;
 }

@@ -1,4 +1,6 @@
-function Player(x, y, z, w, h) {
+function Player(x, y, z, w, h, gems) {
+    this.gems = true;
+    if(gems != undefined) this.gems = gems;
     this.x = x;
     this.y = y;
     this.z = z;
@@ -289,7 +291,7 @@ Player.prototype.update = function(keys, dt, world) {
         this.isOnPlatform();
     }
 
-    this.collectGems(world.gems);
+    if(this.gems) this.collectGems(world.gems);
     this.lastAccelerate = keys.accelerate;
 }
 
@@ -307,6 +309,21 @@ Player.prototype.collision = function(world, lastZ) {
             this.z = z - this.feetDist-0.0001;
             this.zspd = 0;
             this.platformStop = world.platforms[i];
+            if(!this.gems && world.platforms[i] == world.target){
+                world.platforms[i].target = false;
+                for(let j = 0; j < world.platforms[i].w*world.platforms[i].h/500; j++){
+                    world.particles.push(new Particle(world.platforms[i].x+Math.random()*world.platforms[i].w, world.platforms[i].y+Math.random()*world.platforms[i].h, world.platforms[i].z-0.01, 8, 8, 0, 0, -2, 4, 1, "rgb(20, 185, 255)"));
+                }
+                let p = this;
+                let w =  Math.random() * 1000 + 300;
+                let h =  Math.random() * 1000 + 300;
+                let pro = this.z;
+                world.target = new Platform(p.x + Math.random() * 5000 - 2500 - w / 2, p.y + Math.random() * 5000 - 2500 - h / 2, pro + world.difficulty,w, h, true);
+                world.platforms.push(world.target);
+                world.difficulty += 5;
+                world.timeLeft += 10;
+                
+            }
             return;
         }
     }
